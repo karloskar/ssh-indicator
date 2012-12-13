@@ -12,8 +12,8 @@ class PontyIndicator():
 
 		self.home = os.path.expanduser('~')
 
-		self.indicator = appindicator.Indicator("ponty-indicator",
-			self.home + "/ssh-indicator.svg",
+		self.indicator = appindicator.Indicator("ssh-indicator",
+			self.home + "/ssh-indicator/ssh-indicator.svg",
 			appindicator.CATEGORY_APPLICATION_STATUS)
 		self.indicator.set_status(appindicator.STATUS_ACTIVE)
 
@@ -23,9 +23,6 @@ class PontyIndicator():
 		hosts = self.load_ssh_config()
 
 		for hostdict in hosts:
-			# TODO parse the ControlPath to get the pattern 
-			# checking
-			# if '*' in hostdict['host']:
 			if '*' not in hostdict['host']:
 				host = hostdict['host']
 				if 'user' not in hostdict:
@@ -45,6 +42,10 @@ class PontyIndicator():
 						host)
 				self.menu_item.show()
 		self.indicator.set_menu(self.menu)
+
+        while true:
+            self.update_status()
+            time.sleep(60)
 
 	def connect_host(self, w, host):
 		subprocess.Popen(['ssh', '-nNT', host], stdout=subprocess.PIPE)
